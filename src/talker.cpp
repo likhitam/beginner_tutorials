@@ -29,8 +29,8 @@
  *  @section DESCRIPTION
  *
  * Learning to use ROS Kinetic to provide a service for publisher node.
- * Using a publisher node, talker and added a service to modify the text message. 
- * 
+ * 1. Using a publisher node, talker and added a service to modify the text message. 
+ * 2. 
  */
 
 #include <sstream>
@@ -102,6 +102,10 @@ int main(int argc, char **argv) {
    */
   int count = 0;
   while (ros::ok()) {
+    if (m == "") {
+      ROS_ERROR_STREAM("You have not entered any message. Re-run with new string.");
+    return -1;
+    }
     /**
      * This is a message object. You stuff it with data, and then publish it.
      */
