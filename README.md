@@ -50,6 +50,7 @@ roslaunch beginner_tutorials quickRun.launch freq:=20
 
 ```
 Change looprate to other values by replacing 20.
+
 5. To use the service to modify the text message execute the following commands in a new terminal:
 ```
 rosservice call /modifyText "Say something nice."
