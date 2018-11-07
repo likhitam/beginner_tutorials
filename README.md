@@ -49,10 +49,12 @@ source ./devel/setup.bash
 roslaunch beginner_tutorials quickRun.launch freq:=20
 
 ```
-Change looprate to other values by replacing 20.
+Change loop rate to other values by replacing 20. When you change the loop rate you will receive a warning message. If you enter loop rate <= 0, you will recieve fatal message and node will terminate. Else if the loop rate is set succesfully, you will recieve debug message and info will print continuously.  
 
 5. To use the service to modify the text message execute the following commands in a new terminal:
 ```
 rosservice call /modifyText "Say something nice."
 ```
+If you enter new text message as "" empty, you will recieve error message and node will terminate.
+
 6. The talker and listener nodes will continuously run. To end the process enter CTRL+C in both three terminals.
