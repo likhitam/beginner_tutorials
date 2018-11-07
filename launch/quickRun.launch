@@ -1,9 +1,17 @@
 <launch>
+
+  <!-- Argument for changing loop rate -->
+  <arg 
+    name = "freq" 
+    default = "10" 
+  />
+
   <!-- Node 1: talker -->
   <node
     pkg="beginner_tutorials"
     type="talker"
     name="talker"
+    args = "$(arg freq)"
     output="screen"
   />
   <!-- Node 2: listener -->
