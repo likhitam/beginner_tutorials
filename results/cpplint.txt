@@ -1,4 +1,7 @@
 likhita@likhita-HP-Notebook:~/catkin_ws/src/beginner_tutorials$ cpplint $( find . -name \*.hpp -or -name \*.cpp | grep -vE -e "^./build/" -e "^./vendor/" -e "^./docs/" -e "^./results" )
 Done processing ./src/listener.cpp
+./src/talker.cpp:57:  Is this a non-const reference? If so, make const or use a pointer: beginner_tutorials::modifyText::Request& request  [runtime/references] [2]
+./src/talker.cpp:58:  Is this a non-const reference? If so, make const or use a pointer: beginner_tutorials::modifyText::Response& response  [runtime/references] [2]
 Done processing ./src/talker.cpp
+Total errors found: 2
 
