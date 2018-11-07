@@ -1,10 +1,13 @@
 # beginner_tutorials
+
 Programming Assignment: ROS Services, Logging and Launch files
+
 <p align="left">
 <a href='https://opensource.org/licenses/MIT'><img src='https://img.shields.io/badge/License-MIT-brightgreen.svg'/></a>
 </p>
 
 ## Project Description
+
 This project uses ROS Kinetic Version with C++11 features to create a package containing talker and listener nodes. The talker is a server node and the user can use command-line to request a service to modify string message being printed by server. The client may also modify the default loop rate argument (= 10) to a new loop rate. Five types of logger messages are printed based on string or argument, provided as input from the user. A launch file is created that launches both talker and listener nodes simultaneously. 
 
 ## Assumptions 
@@ -52,4 +55,3 @@ Change looprate to other values by replacing 20.
 rosservice call /modifyText "Say something nice."
 ```
 6. The talker and listener nodes will continuously run. To end the process enter CTRL+C in both three terminals.
-
