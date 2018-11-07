@@ -22,24 +22,42 @@
  *  @copyright MIT License 2018 Likhita Madiraju
  *  @file    talker.cpp
  *  @author  Likhita Madiraju
- *  @date    10/30/2018
+ *  @date    11/06/2018
  *
- *  @brief Programming Assignment: ROS Publisher/Subscriber, Week 8, ROS Beginner Tutorial
+ *  @brief Programming Assignment: ROS Publisher/Subscriber, Week 10, ROS Beginner Tutorial
  *
  *  @section DESCRIPTION
  *
- * Learning to use ROS Kinetic to modify publisher node to publish a custom string message.
- * Created a publisher node, talker and linked it to the topic, chatter. 
+ * Learning to use ROS Kinetic to provide a service for publisher node.
+ * Using a publisher node, talker and added a service to modify the text message. 
  * 
  */
 
 #include <sstream>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "beginner_tutorials/modifyText.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
  */
+
+std::string m = "Default message. Enter your own message. ";
+	
+/**
+ *   @brief Service for modifying the text message from default.
+ *
+ *   @param request: service request by client to modify text
+ *   @param response: response to request by server
+ *
+ *   @return bool
+ */
+bool modifyText(beginner_tutorials::modifyText::Request& request,
+                beginner_tutorials::modifyText::Response& response) {
+  m = request.newString;
+  return true;
+}
+
 int main(int argc, char **argv) {
   /**
    * The ros::init() function needs to see argc and argv so that it can perform
@@ -58,6 +76,7 @@ int main(int argc, char **argv) {
    * NodeHandle destructed will close down the node.
    */
   ros::NodeHandle n;
+  ros::ServiceServer server = n.advertiseService("modifyText", modifyText);
   /**
    * The advertise() function is how you tell ROS that you want to
    * publish on a given topic name. This invokes a call to the ROS
@@ -88,7 +107,7 @@ int main(int argc, char **argv) {
      */
     std_msgs::String msg;
     std::stringstream ss;
-    ss << "Happy Halloween!!! -Likhita " << count;
+    ss << m << count;
     msg.data = ss.str();
     ROS_INFO("%s", msg.data.c_str());
     /**
