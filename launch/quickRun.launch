@@ -1,0 +1,17 @@
+<launch>
+  <!-- Node 1: talker -->
+  <node
+    pkg="beginner_tutorials"
+    type="talker"
+    name="talker"
+    output="screen"
+  />
+  <!-- Node 2: listener -->
+  <node
+    pkg="beginner_tutorials"
+    type="listener"
+    name="listener"
+    output="screen"
+    launch-prefix="gnome-terminal --command"	
+  />
+</launch>
