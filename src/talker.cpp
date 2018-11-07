@@ -30,9 +30,11 @@
  *
  * Learning to use ROS Kinetic to provide a service for publisher node.
  * 1. Using a publisher node, talker and added a service to modify the text message. 
- * 2. 
+ * 2. Added five types of logger messages between two nodes to display useful messages.
+ * 3. Added code for receiving a command-line argument to modify the loop rate.
  */
 
+#include <log4cxx/logger.h>
 #include <sstream>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
@@ -42,8 +44,8 @@
  * This tutorial demonstrates simple sending of messages over the ROS system.
  */
 
-std::string m = "Default message. Enter your own message. ";
-	
+extern std::string m = "Default message. Enter your own message. ";
+
 /**
  *   @brief Service for modifying the text message from default.
  *
@@ -59,6 +61,10 @@ bool modifyText(beginner_tutorials::modifyText::Request& request,
 }
 
 int main(int argc, char **argv) {
+  // Setting logger level to display debug message
+  log4cxx::Logger::getLogger(ROSCONSOLE_DEFAULT_NAME)->setLevel(
+      ros::console::g_level_lookup[ros::console::levels::Debug]);
+  ros::console::notifyLoggerLevelsChanged();
   /**
    * The ros::init() function needs to see argc and argv so that it can perform
    * any ROS arguments and name remapping that were provided at the command line.
@@ -95,7 +101,19 @@ int main(int argc, char **argv) {
    * buffer up before throwing some away.
    */
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
-  ros::Rate loop_rate(10);
+  double freq = 10;
+  // Verify if argument is passed
+  if (argc == 2) {
+    freq = atoi(argv[1]);
+    ROS_WARN_STREAM("Loop rate has been changed to " << freq);
+    // Check if a valid argument has been passed
+    if (freq <= 0) {
+      ROS_FATAL_STREAM("Please enter a frequency greater than zero.");
+      return -1;
+    }
+  }
+  ROS_DEBUG_STREAM("Set frequency = " << freq);
+  ros::Rate loop_rate(freq);
   /**
    * A count of how many messages we have sent. This is used to create
    * a unique string for each message.
@@ -103,7 +121,7 @@ int main(int argc, char **argv) {
   int count = 0;
   while (ros::ok()) {
     if (m == "") {
-      ROS_ERROR_STREAM("You have not entered any message. Re-run with new string.");
+      ROS_ERROR_STREAM("Message not entered. Re-run with new string.");
     return -1;
     }
     /**
