@@ -70,7 +70,7 @@ roslaunch beginner_tutorials quickRun.launch store:=false
 To play the recorded messages execute in the results folder the following command:
 ```
 cd ~/catkin_ws/src/beginner_tutorials/results
-rosbag play data.bag
+rosbag play record.bag
 ```
 6. To verify the TF frames using tf_echo and rqt_tf_tree, execute the following commands open three new terminals:
 Terminal 1: broadcasted message will print
