@@ -39,6 +39,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "beginner_tutorials/modifyText.h"
+#include "tf/transform_broadcaster.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
@@ -114,6 +115,17 @@ int main(int argc, char **argv) {
   }
   ROS_DEBUG_STREAM("Set frequency = " << freq);
   ros::Rate loop_rate(freq);
+  
+  static tf::TransformBroadcaster br;
+  // Transform object created called transform
+  tf::Transform transform;
+  // Set origin of the talk frame with respect to world frame
+  transform.setOrigin(tf::Vector3(10.0, 6.0, -2.0));
+  tf::Quaternion q;
+  q.setRPY(0.5, 0.8, 1.57);
+  // Set rotation of the talk frame with respect to world frame
+  transform.setRotation(q);
+
   /**
    * A count of how many messages we have sent. This is used to create
    * a unique string for each message.
@@ -139,6 +151,9 @@ int main(int argc, char **argv) {
      * in the constructor above.
      */
     chatter_pub.publish(msg);
+    // Broadcasting transformation of talk frame to world frame
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),
+                     "world", "talk"));
     ros::spinOnce();
     loop_rate.sleep();
     ++count;
