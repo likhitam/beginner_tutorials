@@ -46,7 +46,9 @@
  * This tutorial demonstrates simple sending of messages over the ROS system.
  */
 
-extern std::string m = "Default message. Enter your own message. ";
+struct TextString {
+  std::string m;
+} text;
 
 /**
  *   @brief Service for modifying the text message from default.
@@ -58,8 +60,8 @@ extern std::string m = "Default message. Enter your own message. ";
  */
 bool modifyText(beginner_tutorials::modifyText::Request& request,
                 beginner_tutorials::modifyText::Response& response) {
-  m = request.newString;
-  response.responseString = m;
+  text.m = request.newString;
+  response.responseString = text.m;
   return true;
 }
 
@@ -104,6 +106,7 @@ int main(int argc, char **argv) {
    * buffer up before throwing some away.
    */
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
+  text.m = "Default message. Enter your own message. ";
   double freq = 10;
   // Verify if argument is passed
   if (argc == 2) {
@@ -117,7 +120,6 @@ int main(int argc, char **argv) {
   }
   ROS_DEBUG_STREAM("Set frequency = " << freq);
   ros::Rate loop_rate(freq);
-  
   static tf::TransformBroadcaster br;
   // Transform object created called transform
   tf::Transform transform;
@@ -134,7 +136,7 @@ int main(int argc, char **argv) {
    */
   int count = 0;
   while (ros::ok()) {
-    if (m == "") {
+    if (text.m == "") {
       ROS_ERROR_STREAM("Message not entered. Re-run with new string.");
     return -1;
     }
@@ -143,7 +145,7 @@ int main(int argc, char **argv) {
      */
     std_msgs::String msg;
     std::stringstream ss;
-    ss << m << count;
+    ss << text.m << count;
     msg.data = ss.str();
     ROS_INFO("%s", msg.data.c_str());
     /**
