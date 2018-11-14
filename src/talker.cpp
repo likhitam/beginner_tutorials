@@ -22,9 +22,9 @@
  *  @copyright MIT License 2018 Likhita Madiraju
  *  @file    talker.cpp
  *  @author  Likhita Madiraju
- *  @date    11/06/2018
+ *  @date    11/13/2018
  *
- *  @brief Programming Assignment: ROS Publisher/Subscriber, Week 10, ROS Beginner Tutorial
+ *  @brief Programming Assignment: ROS Publisher/Subscriber, Week 11, ROS Beginner Tutorial
  *
  *  @section DESCRIPTION
  *
@@ -32,6 +32,7 @@
  * 1. Using a publisher node, talker and added a service to modify the text message. 
  * 2. Added five types of logger messages between two nodes to display useful messages.
  * 3. Added code for receiving a command-line argument to modify the loop rate.
+ * 4. Added test cases to test talker node. Added tf frame broadcaster for talk frame.
  */
 
 #include <log4cxx/logger.h>
@@ -58,6 +59,7 @@ extern std::string m = "Default message. Enter your own message. ";
 bool modifyText(beginner_tutorials::modifyText::Request& request,
                 beginner_tutorials::modifyText::Response& response) {
   m = request.newString;
+  response.responseString = m;
   return true;
 }
 
