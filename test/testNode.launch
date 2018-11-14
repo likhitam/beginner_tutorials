@@ -1,0 +1,14 @@
+<launch>
+  <!-- Node 1: talker -->
+  <node
+    pkg="beginner_tutorials"
+    type="talker"
+    name="talker"
+  />
+  <!-- Test launch-->
+  <test 
+    pkg="beginner_tutorials" 
+    test-name="testNode" 
+    type="testNode" 
+  />
+</launch>
