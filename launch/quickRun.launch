@@ -5,7 +5,11 @@
     name = "freq" 
     default = "10" 
   />
-
+  <!-- Argument for storing messages -->
+  <arg 
+    name = "store" 
+    default = "false" 
+  />
   <!-- Node 1: talker -->
   <node
     pkg="beginner_tutorials"
@@ -21,5 +25,13 @@
     name="listener"
     output="screen"
     launch-prefix="gnome-terminal --command"	
+  />
+  <!-- Node 3: rosbag -->
+  <node
+    pkg="rosbag"
+    type="record"
+    name="record"
+    args = "-a -O $(find beginner_tutorials)/results/record.bag"
+    if = "$(arg store)"
   />
 </launch>
