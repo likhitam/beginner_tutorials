@@ -22,25 +22,49 @@
  *  @copyright MIT License 2018 Likhita Madiraju
  *  @file    talker.cpp
  *  @author  Likhita Madiraju
- *  @date    10/30/2018
+ *  @date    11/06/2018
  *
- *  @brief Programming Assignment: ROS Publisher/Subscriber, Week 8, ROS Beginner Tutorial
+ *  @brief Programming Assignment: ROS Publisher/Subscriber, Week 10, ROS Beginner Tutorial
  *
  *  @section DESCRIPTION
  *
- * Learning to use ROS Kinetic to modify publisher node to publish a custom string message.
- * Created a publisher node, talker and linked it to the topic, chatter. 
- * 
+ * Learning to use ROS Kinetic to provide a service for publisher node.
+ * 1. Using a publisher node, talker and added a service to modify the text message. 
+ * 2. Added five types of logger messages between two nodes to display useful messages.
+ * 3. Added code for receiving a command-line argument to modify the loop rate.
  */
 
+#include <log4cxx/logger.h>
 #include <sstream>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "beginner_tutorials/modifyText.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
  */
+
+extern std::string m = "Default message. Enter your own message. ";
+
+/**
+ *   @brief Service for modifying the text message from default.
+ *
+ *   @param request: service request by client to modify text
+ *   @param response: response to request by server
+ *
+ *   @return bool
+ */
+bool modifyText(beginner_tutorials::modifyText::Request& request,
+                beginner_tutorials::modifyText::Response& response) {
+  m = request.newString;
+  return true;
+}
+
 int main(int argc, char **argv) {
+  // Setting logger level to display debug message
+  log4cxx::Logger::getLogger(ROSCONSOLE_DEFAULT_NAME)->setLevel(
+      ros::console::g_level_lookup[ros::console::levels::Debug]);
+  ros::console::notifyLoggerLevelsChanged();
   /**
    * The ros::init() function needs to see argc and argv so that it can perform
    * any ROS arguments and name remapping that were provided at the command line.
@@ -58,6 +82,7 @@ int main(int argc, char **argv) {
    * NodeHandle destructed will close down the node.
    */
   ros::NodeHandle n;
+  ros::ServiceServer server = n.advertiseService("modifyText", modifyText);
   /**
    * The advertise() function is how you tell ROS that you want to
    * publish on a given topic name. This invokes a call to the ROS
@@ -76,19 +101,35 @@ int main(int argc, char **argv) {
    * buffer up before throwing some away.
    */
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
-  ros::Rate loop_rate(10);
+  double freq = 10;
+  // Verify if argument is passed
+  if (argc == 2) {
+    freq = atoi(argv[1]);
+    ROS_WARN_STREAM("Loop rate has been changed to " << freq);
+    // Check if a valid argument has been passed
+    if (freq <= 0) {
+      ROS_FATAL_STREAM("Please enter a frequency greater than zero.");
+      return -1;
+    }
+  }
+  ROS_DEBUG_STREAM("Set frequency = " << freq);
+  ros::Rate loop_rate(freq);
   /**
    * A count of how many messages we have sent. This is used to create
    * a unique string for each message.
    */
   int count = 0;
   while (ros::ok()) {
+    if (m == "") {
+      ROS_ERROR_STREAM("Message not entered. Re-run with new string.");
+    return -1;
+    }
     /**
      * This is a message object. You stuff it with data, and then publish it.
      */
     std_msgs::String msg;
     std::stringstream ss;
-    ss << "Happy Halloween!!! -Likhita " << count;
+    ss << m << count;
     msg.data = ss.str();
     ROS_INFO("%s", msg.data.c_str());
     /**
